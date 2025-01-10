@@ -1,10 +1,10 @@
 ARG UBUNTU_VERSION=22.04
-ARG NVIDIA_CUDA_VERSION=12.6.1
+ARG NVIDIA_CUDA_VERSION=12.2.0
 
 #
 # Docker builder stage.
 #
-FROM nvidia/cuda:${NVIDIA_CUDA_VERSION}-devel-ubuntu${UBUNTU_VERSION} as builder
+FROM nvidia/cuda:${NVIDIA_CUDA_VERSION}-devel-ubuntu${UBUNTU_VERSION} AS builder
 
 ARG COLMAP_GIT_COMMIT=main
 ARG CUDA_ARCHITECTURES=native
@@ -52,7 +52,7 @@ RUN cd colmap && \
 #
 # Docker runtime stage.
 #
-FROM nvidia/cuda:${NVIDIA_CUDA_VERSION}-runtime-ubuntu${UBUNTU_VERSION} as runtime
+FROM nvidia/cuda:${NVIDIA_CUDA_VERSION}-runtime-ubuntu${UBUNTU_VERSION} AS runtime
 
 # Minimal dependencies to run COLMAP binary compiled in the builder stage.
 # Note: this reduces the size of the final image considerably, since all the
@@ -62,6 +62,7 @@ RUN apt-get update && \
         libboost-program-options1.74.0 \
         libc6 \
         libceres2 \
+        libcurl4 \
         libfreeimage3 \
         libgcc-s1 \
         libgl1 \
